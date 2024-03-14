@@ -3,7 +3,7 @@ data_dir=${1}
 back_iterations=${2}
 hidden_dim=${3}
 
-python main.py \
+python src/smd/main.py \
     --in_memory \
     --data_dir ${data_dir} \
     --save_dir save/smd_iter${back_iterations}_dim${hidden_dim} \
