@@ -5,8 +5,6 @@ import numpy as np
 import pickle
 from PIL import Image
 
-import torch
-
 
 def fix_random_state(seed):
     pass
@@ -18,6 +16,7 @@ def exists(x):
 
 def once(fn):
     called = False
+
     @wraps(fn)
     def inner(x):
         nonlocal called
@@ -25,6 +24,7 @@ def once(fn):
             return
         called = True
         return fn(x)
+
     return inner
 
 
@@ -34,10 +34,10 @@ def default(val, d):
     return d() if callable(d) else d
 
 
-def cast_tuple(t, length = 1):
+def cast_tuple(t, length=1):
     if isinstance(t, tuple):
         return t
-    return ((t,) * length)
+    return (t,) * length
 
 
 def divisible_by(numer, denom):
@@ -81,18 +81,9 @@ def unnormalize_to_zero_to_one(t):
     return (t + 1) * 0.5
 
 
-def num_to_groups(num, divisor):
-    groups = num // divisor
-    remainder = num % divisor
-    arr = [divisor] * groups
-    if remainder > 0:
-        arr.append(remainder)
-    return arr
-
-
 def pkl_load(file_path):
-    with open(file_path, 'rb') as fr:
-        data = pickle.load(fr, encoding='bytes')
+    with open(file_path, "rb") as fr:
+        data = pickle.load(fr, encoding="bytes")
     return data
 
 
@@ -104,27 +95,26 @@ def dump_img(data, file_path):
     if isinstance(data, np.ndarray):
         image = Image.fromarray(data)
     image.save(file_path)
-    
-    
+
+
 class _GaussianMixture(object):
-    
     def __init__(self, means, variances, weights):
         self._means = means
         self._variances = variances
         self._weights = weights
-        
+
     def sample(self):
         indices = np.arange(0, len(self._means))
         pos = np.random.choice(indices, p=self._weights)
-        
+
         mean = self._means[pos]
         std = self._variances[pos]
         return mean + std * np.random.randn(2)
-    
+
 
 def find_all_files(nested_dir):
     results = []
-    
+
     for each in os.listdir(nested_dir):
         path = os.path.join(nested_dir, each)
         if os.path.isdir(path):
